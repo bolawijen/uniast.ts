@@ -5,6 +5,7 @@
   "exports": {
     ".": "./index.ts",
     "./basic": "./basic.ts",
-    "./blocks": "./blocks.ts"
+    "./blocks": "./blocks.ts",
+    "./arithmatics": "./arithmatics.ts"
   }
 }
