@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./basic": "./basic.ts",
+    "./blocks": "./blocks.ts"
   }
 }
