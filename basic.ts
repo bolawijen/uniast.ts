@@ -58,3 +58,65 @@ export function eatPunctuation(parser: Parser, chars: string): string | null {
   }
   return null;
 }
+
+// ── Double quote helpers ("...") ──
+
+/** Read content between double quotes and consume the closing quote. */
+export function readQuote(parser: Parser): string {
+  if (!parser.eat('"')) throw new Error('Expected opening double quote');
+  const start = parser.index;
+  while (parser.index < parser.source.length) {
+    if (parser.source[parser.index] === '\\') {
+      parser.index += 2; // skip escape sequence
+      continue;
+    }
+    if (parser.source[parser.index] === '"') break;
+    parser.index++;
+  }
+  const content = parser.source.slice(start, parser.index);
+  parser.eat('"') || (() => { throw new Error('Unterminated double-quoted string'); })();
+  return content;
+}
+
+/** Eat content between double quotes if present; returns null if not a double quote. */
+export function eatQuote(parser: Parser): string | null {
+  if (!parser.match('"')) return null;
+  return readQuote(parser);
+}
+
+/** Require double-quoted string; throws if missing. */
+export function needQuote(parser: Parser): string {
+  if (!parser.match('"')) throw new Error('Expected double-quoted string');
+  return readQuote(parser);
+}
+
+// ── Single quote helpers ('...') ──
+
+/** Read content between single quotes and consume the closing quote. */
+export function readSingleQuote(parser: Parser): string {
+  if (!parser.eat("'")) throw new Error("Expected opening single quote");
+  const start = parser.index;
+  while (parser.index < parser.source.length) {
+    if (parser.source[parser.index] === '\\') {
+      parser.index += 2;
+      continue;
+    }
+    if (parser.source[parser.index] === "'") break;
+    parser.index++;
+  }
+  const content = parser.source.slice(start, parser.index);
+  parser.eat("'") || (() => { throw new Error("Unterminated single-quoted string"); })();
+  return content;
+}
+
+/** Eat content between single quotes if present; returns null if not a single quote. */
+export function eatSingleQuote(parser: Parser): string | null {
+  if (!parser.match("'")) return null;
+  return readSingleQuote(parser);
+}
+
+/** Require single-quoted string; throws if missing. */
+export function needSingleQuote(parser: Parser): string {
+  if (!parser.match("'")) throw new Error("Expected single-quoted string");
+  return readSingleQuote(parser);
+}
